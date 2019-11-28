@@ -23,6 +23,7 @@ public class Customer {
     private ArrayList<Order> getQuotes();
 
     private void makeOrder();
+    ]
 
 
 

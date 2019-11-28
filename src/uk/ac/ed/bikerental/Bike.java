@@ -17,8 +17,8 @@ public class Bike {
     Bike(BikeType bikeType,  BikeProvider bikeProvider, BigDecimal replacementValue) {
         this.bikeProvider = bikeProvider;
         this.bikeType = bikeType;
-        this.replacmentValue = replacementValue;
-        this.checkedIn = True;
+        this.replacementValue = replacementValue;
+        this.checkedIn = true;
         this.bookings = new TreeSet<DateRange>();
     }
 
@@ -39,13 +39,15 @@ public class Bike {
     public TreeSet<DateRange> getBookings() {return this.bookings;}
 
     /* methods */
-    public checkOut() {this.checkedIn = False}
+    public void checkOut() {this.checkedIn = false;}
 
-    public checkIn
+    public void checkIn() {this.checkedIn = true;}
 
-    public checkDateRange
+    public Boolean checkDateRange(DateRange) {}
+        // TODO check if bike is avaliable to book over a specified date range
 
-    public bookBike
+    public void book(DateRange) {}
+        // TODO add dateRange to treemap
 
 
 
