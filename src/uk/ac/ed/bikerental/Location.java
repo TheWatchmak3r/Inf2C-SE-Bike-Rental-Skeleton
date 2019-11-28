@@ -34,10 +34,7 @@ public class Location {
      * @return True if first two digets of Locations postcodes are equal e.g "EH" in "EH1 6US"
      */
     public boolean isNearTo(Location other) {
-        if (this.postcode.substring(0,2) == other.postcode.substring(0,2)) {
-            return true;
-        }
-        else {return false;}
+        return this.postcode.substring(0, 2).equals(other.postcode.substring(0, 2));
     }
 
     /**

@@ -29,9 +29,7 @@ public class MockDeliveryService implements DeliveryService {
         this.pickups.get(pickupDate).add(deliverable);
     }
     
-    public Collection<Deliverable> getPickupsOn(LocalDate date) {
-        return this.pickups.get(date);
-    }
+    public Collection<Deliverable> getPickupsOn(LocalDate date) {return this.pickups.get(date);}
     
     public void carryOutPickups(LocalDate date) {
         if (this.pickups.containsKey(date)) {
