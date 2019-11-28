@@ -52,12 +52,12 @@ public class Bike {
 
     public void checkIn() {this.status = BikeStatus.AVAILABLE;}
 
-    public Boolean checkDateRange(DateRange) {}
+    public Boolean checkDateRange(DateRange dates) {}
         // TODO check if bike is avaliable to book over a specified date range
 
-    public void book(DateRange) {
+    public void book(DateRange dates) {
         // TODO add dateRange to treemap
-        this.status = BikeStatus.RESERVE;
+        this.status = BikeStatus.RESERVED;
     }
     
 }
