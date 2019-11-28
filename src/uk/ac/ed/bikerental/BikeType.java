@@ -23,8 +23,8 @@ enum Type {
 
 public class BikeType {
 	
-	private Type bikeType;
-	private BigDecimal replacementValue;
+    private Type bikeType;
+    private BigDecimal replacementValue;
 	
 	/* constructor */
     public BikeType(String typeName, BigDecimal replacementValue) {
@@ -37,9 +37,9 @@ public class BikeType {
         this.replacementValue = replacementValue;
     }
     
-	public Type getBikeType() {
-		return bikeType;
-	}
+    public Type getBikeType() {
+	return bikeType;
+    }
 	
     public BigDecimal getReplacementValue() {
         return this.replacementValue;
