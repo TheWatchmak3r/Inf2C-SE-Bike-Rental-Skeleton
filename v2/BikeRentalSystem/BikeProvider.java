@@ -2,6 +2,7 @@
 import java.math.BigDecimal;
 import java.net.BindException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ public class BikeProvider {
     private ArrayList<BikeProvider> partners;
     private ArrayList<BikeType> bikeTypes;
     private ArrayList<Bike> bikeStock;
+    private Map<String,Order> orders;
 
     /* constructor */
     public BikeProvider(String name, Location location, BigDecimal depositRate) {
@@ -22,6 +24,7 @@ public class BikeProvider {
         this.partners = new ArrayList<BikeProvider>();
         this.bikeTypes = new ArrayList<BikeType>();
         this.bikeStock = new ArrayList<Bike>();
+        this.orders = new HashMap<String,Order>();
         SystemDatabase.addBikeProvider(this);
     }
 
@@ -40,25 +43,39 @@ public class BikeProvider {
         return partners.contains(other);
     }
 
-    public ArrayList<BikeType> getBikeTypes() {
+    private ArrayList<BikeType> getBikeTypes() {
         return bikeTypes;
     }
 
-    public ArrayList<Bike> getBikeStock() {
+    private ArrayList<Bike> getBikeStock() {
         return bikeStock;
     }
 
+    private Map<String,Order> getOrders() {
+        return orders;
+    }
+
     /* methods */
-    public void addBikeType(String typeName, BikeCategory bikeCategory,
+    public void addPartner(BikeProvider partnerBikeProvider) {
+        partners.add(partnerBikeProvider);
+    }
+
+    public void addOrder(Order order) {
+        orders.put(order.getId(), order);
+    }
+
+    private void addBikeType(String typeName, BikeCategory bikeCategory,
                              BigDecimal replacementValue, BigDecimal dailyRentalPrice) {
         this.bikeTypes.add(new BikeType(this, typeName, bikeCategory,
         		replacementValue, dailyRentalPrice));
     }
 
-    public void addBike(BikeType bikeType) {
+    private void addBike(BikeType bikeType) {
     	bikeStock.add(new Bike(bikeType));
     }
 
+    // called by entryPoint requestQuote()
+    // checks if provider has specified bikes on required dates in the local area
     public Order searchForQuote(DateRange dateRange, Location location,
                                 ArrayList<BikeCategory> requestedBikeCategories, Boolean delivery) {
         HashSet<Bike> bikesAvailable = new HashSet<Bike>();
@@ -79,7 +96,7 @@ public class BikeProvider {
     }
 
     public void checkoutBikes(String bookingID) {
-        SystemDatabase.orders.get(bookingID).takeBikes();
+        orders.get(bookingID).takeBikes();
     }
 
     public void returnBikes(Order order) {

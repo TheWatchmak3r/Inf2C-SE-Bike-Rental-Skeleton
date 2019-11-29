@@ -92,7 +92,9 @@ public class Order implements Deliverable { // TODO extends deliverable?
     }
 
     public void book() {
-        assert (this.customer != null);
+        if (this.customer == null) {
+            throw
+        }
         for (Bike bike : bikes) {
             bike.book(dateRange);
         }

@@ -39,6 +39,7 @@ public class EntryPoint {
         chosenQuote.addCustomer(customer);
         chosenQuote.book();
         SystemDatabase.addOrder(chosenQuote);
+        chosenQuote.getBikeProvider().addOrder(chosenQuote);
         if (chosenQuote.isDelivery()) {
             DeliveryServiceFactory.getDeliveryService().scheduleDelivery(chosenQuote, chosenQuote.getBikeProvider()
                     .getLocation(), chosenQuote.getLocation(), chosenQuote.getDateRange().getStart());
