@@ -71,19 +71,18 @@ public class BikeProvider {
                 }
             }
         }
-        return null; //TODO throw message
+        return null;
     }
 
     public void bookOrder(Order order) {
-        order.book(); // todo return order?
-
+        order.book();
     }
 
-    public void checkoutBikes(Order order) {
-        order.takeBikes();
+    public void checkoutBikes(String bookingID) {
+        SystemDatabase.orders.get(bookingID).takeBikes();
     }
 
     public void returnBikes(Order order) {
-        order.returnBikes();
+        order.returnBikes(location);
     }
 }

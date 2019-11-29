@@ -11,7 +11,7 @@ enum BikeStatus {
 	ON_DELIVERY
 }
 
-public class Bike extends BikeType implements Deliverable {
+public class Bike extends BikeType {
 	/* fields */
     public TreeSet<DateRange> bookings;
     public BikeStatus bikeStatus;
@@ -32,6 +32,7 @@ public class Bike extends BikeType implements Deliverable {
     public TreeSet<DateRange> getBookings() {
         return bookings;
     }
+
     /* methods */
     public void checkOut() {
         bikeStatus = BikeStatus.CHECKED_OUT;
@@ -58,13 +59,5 @@ public class Bike extends BikeType implements Deliverable {
         assert checkDateRange(dates);
         bookings.add(dates);
     }
-    
-    public void onPickup() {
-    	bikeStatus = BikeStatus.ON_DELIVERY;
-    }
-    
-    public void onDropoff() {
-    	bikeStatus = BikeStatus.CHECKED_OUT;
-    }
-    
+
 }

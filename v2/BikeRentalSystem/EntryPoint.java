@@ -33,9 +33,16 @@ public class EntryPoint {
     }
 
     // books a quote by becoming a customer
-    public Customer bookQuote(String firstName, String surname, Order chosenQuote) {
+    public Order bookQuote(String firstName, String surname, Order chosenQuote) {
         assert quoteList.contains(chosenQuote);
+        Customer customer =  new Customer(firstName, surname, chosenQuote.getLocation(), chosenQuote);
+        chosenQuote.addCustomer(customer);
         chosenQuote.book();
-        return new Customer(firstName, surname, chosenQuote.getLocation(), chosenQuote);
+        SystemDatabase.addOrder(chosenQuote);
+        if (chosenQuote.isDelivery()) {
+            DeliveryServiceFactory.getDeliveryService().scheduleDelivery(chosenQuote, chosenQuote.getBikeProvider()
+                    .getLocation(), chosenQuote.getLocation(), chosenQuote.getDateRange().getStart());
+        }
+        return chosenQuote;
     }
 }

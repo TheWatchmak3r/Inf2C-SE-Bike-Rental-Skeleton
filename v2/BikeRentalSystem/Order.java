@@ -12,7 +12,7 @@ enum OrderStatus {
 	COMPLETE; // when bike returned by customer & deposit returned by provider
 }
 
-public class Order { // TODO extends deliverable?
+public class Order implements Deliverable { // TODO extends deliverable?
 
     /* fields */
     private static final String id = UUID.randomUUID().toString();
@@ -69,6 +69,11 @@ public class Order { // TODO extends deliverable?
     }
 
     /* methods */
+    public void addCustomer(Customer customer) {
+        this.customer = customer;
+
+    }
+
     public BigDecimal calculatePrice() {
         BigDecimal sumPrice = new BigDecimal(0);
         BigDecimal days = new BigDecimal(dateRange.toDays());
@@ -87,6 +92,7 @@ public class Order { // TODO extends deliverable?
     }
 
     public void book() {
+        assert (this.customer != null);
         for (Bike bike : bikes) {
             bike.book(dateRange);
         }
@@ -95,19 +101,38 @@ public class Order { // TODO extends deliverable?
 
     public void takeBikes() {
     	status = OrderStatus.STARTED;
-    	if (this.isDelivery()) {
-    		MockDeliveryService mockdelivery = new MockDeliveryService();
-    		mockdelivery.carryOutPickups(dateRange.getStart());
-    		mockdelivery.carryOutDropoffs();
+    	if (isDelivery()) {
+    	    onPickup();
     	}
     	else {
-    		for (Bike b : bikes) {b.checkOut();}
+    		for (Bike bike : bikes) {bike.checkOut();}
     	}
     }
 
-    public void returnBikes() {
-    	this.status = OrderStatus.COMPLETE;
-    	for (Bike b : bikes) {b.checkIn();}
+    public void returnBikes(Location returnLocation) {
+        if (returnLocation != bikeProvider.getLocation()) {
+            MockDeliveryService mockDelivery = new MockDeliveryService();
+            mockDelivery.scheduleDelivery(this, returnLocation, bikeProvider.getLocation(), dateRange.getEnd());
+        }
+    	else {
+    	    for (Bike bike : bikes) {
+                bike.checkIn();
+            }
+    	    status = OrderStatus.COMPLETE;
+    	}
     }
 
+    @Override
+    public void onPickup() {
+        for (Bike bikes : bikes) {
+            bikes.bikeStatus = BikeStatus.ON_DELIVERY;
+        }
+    }
+
+    @Override
+    public void onDropoff() {
+        for (Bike bike : bikes) {
+            bike.checkOut();
+        }
+    }
 }
