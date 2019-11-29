@@ -2,25 +2,27 @@
 import java.math.BigDecimal;
 import java.net.BindException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 
 public class BikeProvider {
     /* fields */
     private String name;
     private Location location;
-    private double depositRate;
+    private BigDecimal depositRate;
     private ArrayList<BikeProvider> partners;
     private ArrayList<BikeType> bikeTypes;
     private ArrayList<Bike> bikeStock;
 
     /* constructor */
-    public BikeProvider(String name, Location location, double depositRate) {
+    public BikeProvider(String name, Location location, BigDecimal depositRate) {
         this.name = name;
         this.location = location;
         this.depositRate = depositRate;
         this.partners = new ArrayList<BikeProvider>();
         this.bikeTypes = new ArrayList<BikeType>();
-        this.bikeStock = new ArrayList<Bike>();  
+        this.bikeStock = new ArrayList<Bike>();
+        SystemDatabase.addBikeProvider(this);
     }
 
     /* accessors */
@@ -32,9 +34,7 @@ public class BikeProvider {
         return location;
     }
 
-    public BigDecimal getDepositRate() {
-        return new BigDecimal(depositRate);
-    }
+    public BigDecimal getDepositRate() { return depositRate; }
 
     public boolean isPartnerWith(BikeProvider other) {
         return partners.contains(other);
@@ -56,13 +56,22 @@ public class BikeProvider {
     }
 
     public void addBike(BikeType bikeType) {
-        // TODO (last) change to map implementation so can be called with name string
     	bikeStock.add(new Bike(bikeType));
     }
 
-    public Order searchQuote(QuoteRequest quoteRequest) {
-        //TODO write method checking if provider can fufill quote and adding quote to quote request if so
-        return null;
+    public Order searchForQuote(DateRange dateRange, Location location,
+                                ArrayList<BikeCategory> requestedBikeCategories, Boolean delivery) {
+        HashSet<Bike> bikesAvailable = new HashSet<Bike>();
+        for (Bike bike : bikeStock) {
+            if (requestedBikeCategories.contains(bike.getBikeCategory()) && bike.checkDateRange(dateRange)) {
+                bikesAvailable.add(bike);
+                if (bikesAvailable.size() == requestedBikeCategories.size()) {
+                    Order quote =  new Order(this, dateRange, location, bikesAvailable, delivery);
+                    return quote;
+                }
+            }
+        }
+        return null; //TODO throw execption message
     }
 
     public void bookOrder(Order order) {

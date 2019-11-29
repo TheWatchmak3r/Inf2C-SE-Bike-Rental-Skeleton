@@ -14,6 +14,12 @@ public class QuoteRequest {
         this.location = location;
         this.bikes = bikes;
         this.quotes = new ArrayList<Order>();
+        for (BikeProvider bikeProvider : SystemDatabase.bikeProviders) {
+            Order quote = bikeProvider.searchForQuote(this);
+            if (quote != null) {
+                quotes.add(quote);
+            }
+        }
     }
 
     /* accessors */
