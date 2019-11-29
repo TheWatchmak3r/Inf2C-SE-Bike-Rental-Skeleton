@@ -1,6 +1,7 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
+<<<<<<< HEAD
 import java.util.Objects;
 
 // decided to implement as an enum
@@ -52,5 +53,49 @@ public class BikeType {
         return bikeProvider.getDepositRate().multiply(replacementValue);
     }
 
+=======
+
+//decided to implement as an enum for bike types
+enum Type {
+    MOUNTAIN("mountain bike"),
+    ROAD("road bike"),
+    HYBRID("hybrid bike"),
+    EBIKE("electric bike");
+	
+    /* fields */
+    private String typeName;
+    
+    /* constructor */
+	Type(String typeName) {
+		this.typeName = typeName;
+	}
+	
+	/* accessors */
+    public String getType() {return this.typeName;}
+>>>>>>> 37c057210c65243aa7b5aed3d24d76ae1ee48783
 }
 
+public class BikeType {
+	
+    private Type bikeType;
+    private BigDecimal replacementValue;
+	
+	/* constructor */
+    public BikeType(String typeName, BigDecimal replacementValue) {
+    	for (Type t : Type.values()) {
+    		if (t.getType() == typeName.toLowerCase()) {
+    			this.bikeType = t;
+    			break;
+    		}
+    	}
+        this.replacementValue = replacementValue;
+    }
+    
+    public Type getBikeType() {
+	return bikeType;
+    }
+	
+    public BigDecimal getReplacementValue() {
+        return this.replacementValue;
+    }
+}
