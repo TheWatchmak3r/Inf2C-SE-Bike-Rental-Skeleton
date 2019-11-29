@@ -34,16 +34,15 @@ public class BikeType {
     }
 
     public BigDecimal getReplacementValue() {
-
         return replacementValue;
     }
 
     public BigDecimal getDailyRentalPrice() {
-
         return dailyRentalPrice;
     }
 
     /* methods */
+    // TODO (last) change deposit value to a field
     public BigDecimal getDepositValue() {
         return bikeProvider.getDepositRate().multiply(replacementValue);
     }

@@ -1,65 +1,70 @@
 
+import sun.reflect.generics.tree.Tree;
+
 import java.math.BigDecimal;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 enum BikeStatus {
 	AVAILABLE,
-	RESERVED,
 	CHECKED_OUT,
-	ON_DELIVERY;
+	ON_DELIVERY
 }
 
 public class Bike extends BikeType implements Deliverable {
 	/* fields */
     public TreeSet<DateRange> bookings;
-    public BikeStatus status;  // there are 4 statuses for a bike
+    public BikeStatus bikeStatus;
 
     /* constructor */
     public Bike(BikeType bikeType) {
-        super(bikeType.getBikeProvider(), bikeType.getBikeType(), 
-        		bikeType.getBikeCategory(), bikeType.getReplacementValue(), 
-        		bikeType.getDailyRentalPrice());
-        // TODO work out how to sort by start-date
+        super(bikeType.getBikeProvider(), bikeType.getBikeType(), bikeType.getBikeCategory(),
+                bikeType.getReplacementValue(), bikeType.getDailyRentalPrice());
         this.bookings = new TreeSet<>();
-        this.status = BikeStatus.AVAILABLE;
+        this.bikeStatus = BikeStatus.AVAILABLE;
     }
 
     /* accessors */
-    public BikeProvider getBikeProvider() {return super.getBikeProvider();}
-    
-    // TODO test functionality (do we even need this)
-    public BigDecimal getDepositValue(BigDecimal depositRate) {
-        return depositRate.multiply(getReplacementValue());
+    public BikeStatus getBikeStatus() {
+        return bikeStatus;
     }
 
     public TreeSet<DateRange> getBookings() {
         return bookings;
     }
-
     /* methods */
-    
-    public Boolean isAvailable() {return status == BikeStatus.AVAILABLE;}
-    
-    public void checkOut() {status = BikeStatus.CHECKED_OUT;}
+    public void checkOut() {
+        bikeStatus = BikeStatus.CHECKED_OUT;
+    }
 
-    public void checkIn() {status = BikeStatus.AVAILABLE;}
+    public void checkIn() {
+        bikeStatus = BikeStatus.AVAILABLE;
+    }
 
+    // checks if a bike is available to be booked over a certain date range
     public boolean checkDateRange(DateRange dates) {
-    	// TODO check if bike is avaliable to book over a specified date range
-    	return false;
+        DateRange ceiling = bookings.ceiling(dates);
+        DateRange floor = bookings.floor(dates);
+        if ((ceiling != null) && (dates.overlaps(ceiling))) {
+            return false;
+        }
+        if ((floor != null) && (dates.overlaps(floor))) {
+            return false;
+        }
+        return true;
     }
 
     public void book(DateRange dates) {
-        // TODO add dateRange to treemap
-        status = BikeStatus.RESERVED;
+        assert checkDateRange(dates);
+        bookings.add(dates);
     }
     
     public void onPickup() {
-    	status = BikeStatus.ON_DELIVERY;
+    	bikeStatus = BikeStatus.ON_DELIVERY;
     }
     
     public void onDropoff() {
-    	status = BikeStatus.CHECKED_OUT;
+    	bikeStatus = BikeStatus.CHECKED_OUT;
     }
     
 }
