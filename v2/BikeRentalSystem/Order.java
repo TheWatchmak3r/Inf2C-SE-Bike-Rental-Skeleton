@@ -62,12 +62,11 @@ public class Order { // TODO extends deliverable?
 
     public BigDecimal getDeposit() { return deposit; }
 
+    public boolean isDelivery() {return delivery;}
+
     public OrderStatus getStatus() {
         return status;
     }
-
-    // TODO get deposit
-    //TODO get price
 
     /* methods */
     public BigDecimal calculatePrice() {
@@ -78,6 +77,7 @@ public class Order { // TODO extends deliverable?
         }
         return sumPrice;
     }
+
     public BigDecimal calculateDeposit() {
         BigDecimal sumDeposit = new BigDecimal(0);
         for (Bike bike : bikes) {
@@ -86,20 +86,11 @@ public class Order { // TODO extends deliverable?
         return sumDeposit;
     }
 
-    public void addCustomer(Customer customer) { this.customer = customer;}
-
-    public boolean isDelivery() {return delivery;}
-    
-    public boolean isBooked() {return this.status == OrderStatus.BOOKED;}
-
-    public boolean isStarted() {return this.status == OrderStatus.STARTED;}
-
     public void book() {
         for (Bike bike : bikes) {
-            bike.book(this.dateRange);
+            bike.book(dateRange);
         }
         this.status = OrderStatus.BOOKED;
-        // TODO (last) add error message if bikes are no longer bookable
     }
 
     public void takeBikes() {

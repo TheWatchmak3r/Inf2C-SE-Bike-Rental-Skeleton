@@ -5,12 +5,16 @@ import java.util.UUID;
 
 public class EntryPoint {
     /* fields */
+    ArrayList<Order> quoteList = null;
 
     /* constructor */
     public EntryPoint() {
     }
 
     /* accessors */
+    ArrayList<Order> getQuoteList() {
+        return quoteList;
+    }
 
     /* methods */
     public ArrayList<Order> requestQuote(DateRange dateRange, Location location,
@@ -24,9 +28,14 @@ public class EntryPoint {
                 }
             }
         }
+        quoteList = quotes;
         return quotes;
     }
 
-    // TODO accept quote by becoming a customer
-
+    // books a quote by becoming a customer
+    public Customer bookQuote(String firstName, String surname, Order chosenQuote) {
+        assert quoteList.contains(chosenQuote);
+        chosenQuote.book();
+        return new Customer(firstName, surname, chosenQuote.getLocation(), chosenQuote);
+    }
 }

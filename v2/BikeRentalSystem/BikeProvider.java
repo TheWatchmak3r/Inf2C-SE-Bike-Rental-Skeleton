@@ -71,11 +71,12 @@ public class BikeProvider {
                 }
             }
         }
-        return null; //TODO throw execption message
+        return null; //TODO throw message
     }
 
     public void bookOrder(Order order) {
-        order.book();
+        order.book(); // todo return order?
+
     }
 
     public void checkoutBikes(Order order) {

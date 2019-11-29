@@ -8,17 +8,15 @@ public class Customer {
     private final String surname;
     private final String id;
     private Location location;
-    private QuoteRequest quoteRequest;
     private Order order;
 
     /* constructor */
-    Customer(String firstName, String surname, Location location, QuoteRequest quoteRequest) {
+    Customer(String firstName, String surname, Location location, Order order) {
         this.firstName = firstName;
         this.surname = surname;
         this.id = UUID.randomUUID().toString();
         this.location = location;
-        this.quoteRequest = quoteRequest;
-        this.order = null;
+        this.order = order;
     }
 
     /* accessors */
@@ -42,6 +40,5 @@ public class Customer {
     public void makeOrder(Order acceptedOrder) {
         order = acceptedOrder;
         acceptedOrder.book();
-    };
-
+    }
 }
