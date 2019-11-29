@@ -4,25 +4,53 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 // decided to implement as an enum
-public enum BikeType {
-
-    MOUNTAIN("Mountain bike"),
-    ROAD("Road bike"),
-    HYBRID("Hybrid bike"),
-    EBIKE("Electric bike");
-
+public class BikeType {
     /* fields */
-    private String typeName;
+    BikeProvider bikeProvider;
+    String typeName;
+    BikeCategory bikeCategory;
+    BigDecimal replacementValue;
+    BigDecimal dailyRentalPrice;
+
 
     /* constructor */
-    BikeType(String typeName) {
+    BikeType(BikeProvider bikeProvider, String typeName, BikeCategory bikeCategory,
+             BigDecimal replacementValue, BigDecimal dailyRentalPrice) {
+        this.bikeProvider = bikeProvider;
         this.typeName = typeName;
+        this.bikeCategory = bikeCategory;
+        this.replacementValue = replacementValue;
+        this.dailyRentalPrice = dailyRentalPrice;
     }
 
     /* accessors */
-    public String getBikeType() {return this.typeName;}
+    public BikeProvider getBikeProvider() {
+        return bikeProvider;
+    }
+
+    public String getBikeType() {
+        return this.typeName;
+    }
+
+    public BikeCategory getBikeCategory() {
+
+        return bikeCategory;
+    }
+
+    public BigDecimal getReplacementValue() {
+
+        return replacementValue;
+    }
+
+    public BigDecimal getDailyRentalPrice() {
+
+        return dailyRentalPrice;
+    }
 
     /* methods */
+    public BigDecimal getDepositValue() {
+        return bikeProvider.getDepositRate().multiply(replacementValue);
+    }
 
 }
 

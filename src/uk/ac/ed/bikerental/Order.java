@@ -8,6 +8,7 @@ public class Order {
 
     /* fields */
     private static final String id = UUID.randomUUID().toString();
+    private Customer customer;
     private DateRange date;
     private ArrayList<Bike> bikes;
     private Boolean delivery;
@@ -15,7 +16,9 @@ public class Order {
     public Boolean bikesTaken;
 
     /* constructor */
-    Order(DateRange date, ArrayList<Bike> bikes, Boolean delivery) {
+    Order(Customer customer, DateRange date, ArrayList<Bike> bikes, Boolean delivery) {
+        this.customer = customer;
+        this.date = date;
         this.bikes = bikes;
         this.delivery = delivery;
         this.booked = false;
@@ -23,26 +26,43 @@ public class Order {
     }
 
     /* accessors */
-    public String getId() {return id;}
+    public Customer getCustomer() {
+        return customer;
+    }
 
-    public DateRange getDate() {return date;}
+    public String getId() {
+        return id;
+    }
 
-    public ArrayList<Bike> getBikes() {return bikes;}
+    public DateRange getDate() {
+        return date;
+    }
 
-    public Boolean isDelivery() {return delivery;}
+    public ArrayList<Bike> getBikes() {
+        return bikes;
+    }
 
-    public Boolean isBooked() {return booked;}
+    public Boolean isDelivery() {
+        return delivery;
+    }
 
-    public Boolean isTaken() {return bikesTaken;}
+    public Boolean isBooked() {
+        return booked;
+    }
+
+    public Boolean isTaken() {
+        return bikesTaken;
+    }
 
     /* methods */
     public void book() {
         for (Bike bike : bikes) {
             bike.book(this.date);
         }
+        // TODO (last) add error message if bikes are no longer bookable
     }
 
-    public void takeBikes() {this.bikesTaken = true;}
+    public void ckeckoutBikes() {this.bikesTaken = true;}
 
     public void returnBikes() {this.bikesTaken = false;}
 

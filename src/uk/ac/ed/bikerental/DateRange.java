@@ -18,6 +18,7 @@ public class DateRange {
      * @param end The end date of the rental (exclusive)
      */
     public DateRange(LocalDate start, LocalDate end) {
+        assert start.isBefore(end);
         this.start = start;
         this.end = end;
     }
@@ -28,7 +29,7 @@ public class DateRange {
      * @return start date of rental agreement
      */
     public LocalDate getStart() {
-        return this.start;
+        return start;
     }
 
     /**
@@ -37,7 +38,7 @@ public class DateRange {
      * @return end date of rental agreement
      */
     public LocalDate getEnd() {
-        return this.end;
+        return end;
     }
 
     /**
@@ -46,7 +47,7 @@ public class DateRange {
      * @return returns duration of rental agreement in chronounit years
      */
     public long toYears() {
-        return ChronoUnit.YEARS.between(this.getStart(), this.getEnd());
+        return ChronoUnit.YEARS.between(start, end);
     }
 
     /**
@@ -55,20 +56,22 @@ public class DateRange {
      * @return returns duration of rental agreement in chrono unit years
      */
     public long toDays() {
-        return ChronoUnit.DAYS.between(this.getStart(), this.getEnd());
+        return ChronoUnit.DAYS.between(start, end);
     }
 
     /**
      * Check if the DateRange overlaps with another DateRange booking
      *
-     * @param The other DateRange booking this DateRange is being compared to
+     * @param The Other DateRange booking this DateRange is being compared to
      * @return True if overlaps with other DateRange specified
      */
     public Boolean overlaps(DateRange other) {
-        if ((this.startDate.isBefore(other.endDate)) && (this.endDate.isAfter(other.startDate))) {
-            return True;
+        if ((start.isBefore(other.end)) && (end.isAfter(other.start))) {
+            return true;
         }
-        else {return False;}
+        else {
+            return false;
+        }
     }
 
     @Override
