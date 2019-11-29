@@ -1,18 +1,14 @@
+
 import java.util.ArrayList;
 
 // Bike Rental System Database
 
 public class SystemDatabase {
     /* fields */
-    public static ArrayList<BikeProvider> bikeProviders;
-
-    /* constructor */
-    SystemDatabase() {
-
-    }
+    public static ArrayList<BikeProvider> bikeProviders = new ArrayList<BikeProvider>();
 
     /*accessors */
-    public ArrayList<BikeProvider> getBikeProviders() {
+    public static ArrayList<BikeProvider> getBikeProviders() {
         return bikeProviders;
     }
 
