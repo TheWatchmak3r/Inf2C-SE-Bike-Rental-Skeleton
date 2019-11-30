@@ -11,12 +11,12 @@ public class Customer {
     private Order order;
 
     /* constructor */
-    Customer(String firstName, String surname, Location location, Order order) {
+    Customer(String firstName, String surname, Location location) {
         this.firstName = firstName;
         this.surname = surname;
         this.id = UUID.randomUUID().toString();
         this.location = location;
-        this.order = order;
+        this.order = null;
     }
 
     /* accessors */
@@ -38,7 +38,7 @@ public class Customer {
 
     /* methods */
     public void makeOrder(Order acceptedOrder) {
-        order = acceptedOrder;
-        acceptedOrder.book();
+        this.order = acceptedOrder;
+        acceptedOrder.book(this);
     }
 }

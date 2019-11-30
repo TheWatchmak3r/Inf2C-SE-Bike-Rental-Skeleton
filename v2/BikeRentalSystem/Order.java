@@ -1,7 +1,5 @@
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -41,6 +39,8 @@ public class Order implements Deliverable { // TODO extends deliverable?
 
     /* accessors */
     public String getId() {
+        System.out.println("id is : " + id);
+        System.out.println(UUID.randomUUID().toString());
         return id;
     }
 
@@ -69,10 +69,6 @@ public class Order implements Deliverable { // TODO extends deliverable?
     }
 
     /* methods */
-    public void addCustomer(Customer customer) {
-        this.customer = customer;
-
-    }
 
     public BigDecimal calculatePrice() {
         BigDecimal sumPrice = new BigDecimal(0);
@@ -86,29 +82,28 @@ public class Order implements Deliverable { // TODO extends deliverable?
     public BigDecimal calculateDeposit() {
         BigDecimal sumDeposit = new BigDecimal(0);
         for (Bike bike : bikes) {
-            sumDeposit = sumDeposit.add(bike.getDepositValue().multiply(bike.getReplacementValue()));
+            sumDeposit = sumDeposit.add(bike.getDepositValue());
         }
         return sumDeposit;
     }
 
-    public void book() {
-        if (this.customer == null) {
-            throw
-        }
+    public Order book(Customer customer) {
+        this.customer = customer;
         for (Bike bike : bikes) {
             bike.book(dateRange);
         }
         this.status = OrderStatus.BOOKED;
+        return this;
     }
 
     public void takeBikes() {
-    	status = OrderStatus.STARTED;
-    	if (isDelivery()) {
-    	    onPickup();
-    	}
-    	else {
-    		for (Bike bike : bikes) {bike.checkOut();}
-    	}
+        status = OrderStatus.STARTED;
+        if (isDelivery()) {
+            onPickup();
+        }
+        else {
+            for (Bike bike : bikes) {bike.checkOut();}
+        }
     }
 
     public void returnBikes(Location returnLocation) {
@@ -116,22 +111,20 @@ public class Order implements Deliverable { // TODO extends deliverable?
             MockDeliveryService mockDelivery = new MockDeliveryService();
             mockDelivery.scheduleDelivery(this, returnLocation, bikeProvider.getLocation(), dateRange.getEnd());
         }
-    	else {
-    	    for (Bike bike : bikes) {
+        else {
+            for (Bike bike : bikes) {
                 bike.checkIn();
             }
-    	    status = OrderStatus.COMPLETE;
-    	}
+            status = OrderStatus.COMPLETE;
+        }
     }
 
-    @Override
     public void onPickup() {
         for (Bike bikes : bikes) {
             bikes.bikeStatus = BikeStatus.ON_DELIVERY;
         }
     }
 
-    @Override
     public void onDropoff() {
         for (Bike bike : bikes) {
             bike.checkOut();

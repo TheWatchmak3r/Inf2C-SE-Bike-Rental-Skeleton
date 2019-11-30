@@ -1,9 +1,10 @@
 
+
 public enum BikeCategory {
-    MOUNTAIN("Mountain bike"),
-    ROAD("Road bike"),
-    HYBRID("Hybrid bike"),
-    EBIKE("Electric bike");
+    MOUNTAIN("mountain bike"),
+    ROAD("road bike"),
+    HYBRID("hybrid bike"),
+    EBIKE("electric bike");
 
     /* fields */
     private String categoryName;

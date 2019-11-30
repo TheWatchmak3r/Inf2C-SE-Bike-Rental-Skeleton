@@ -1,7 +1,5 @@
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class EntryPoint {
     /* fields */
@@ -35,9 +33,9 @@ public class EntryPoint {
     // books a quote by becoming a customer
     public Order bookQuote(String firstName, String surname, Order chosenQuote) {
         assert quoteList.contains(chosenQuote);
-        Customer customer =  new Customer(firstName, surname, chosenQuote.getLocation(), chosenQuote);
-        chosenQuote.addCustomer(customer);
-        chosenQuote.book();
+        Customer customer =  new Customer(firstName, surname, chosenQuote.getLocation());
+        customer.makeOrder(chosenQuote);
+        chosenQuote.book(customer);
         SystemDatabase.addOrder(chosenQuote);
         chosenQuote.getBikeProvider().addOrder(chosenQuote);
         if (chosenQuote.isDelivery()) {

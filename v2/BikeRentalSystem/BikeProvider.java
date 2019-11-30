@@ -1,10 +1,8 @@
 
 import java.math.BigDecimal;
-import java.net.BindException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.HashMap;
 
 public class BikeProvider {
     /* fields */
@@ -14,7 +12,7 @@ public class BikeProvider {
     private ArrayList<BikeProvider> partners;
     private ArrayList<BikeType> bikeTypes;
     private ArrayList<Bike> bikeStock;
-    private Map<String,Order> orders;
+    private HashMap<String,Order> orders;
 
     /* constructor */
     public BikeProvider(String name, Location location, BigDecimal depositRate) {
@@ -43,15 +41,15 @@ public class BikeProvider {
         return partners.contains(other);
     }
 
-    private ArrayList<BikeType> getBikeTypes() {
+    public ArrayList<BikeType> getBikeTypes() {
         return bikeTypes;
     }
 
-    private ArrayList<Bike> getBikeStock() {
+    public ArrayList<Bike> getBikeStock() {
         return bikeStock;
     }
 
-    private Map<String,Order> getOrders() {
+    public HashMap<String,Order> getOrders() {
         return orders;
     }
 
@@ -64,14 +62,14 @@ public class BikeProvider {
         orders.put(order.getId(), order);
     }
 
-    private void addBikeType(String typeName, BikeCategory bikeCategory,
+    public void addBikeType(String typeName, BikeCategory bikeCategory,
                              BigDecimal replacementValue, BigDecimal dailyRentalPrice) {
         this.bikeTypes.add(new BikeType(this, typeName, bikeCategory,
-        		replacementValue, dailyRentalPrice));
+                replacementValue, dailyRentalPrice));
     }
 
-    private void addBike(BikeType bikeType) {
-    	bikeStock.add(new Bike(bikeType));
+    public void addBike(Bike bike) {
+        bikeStock.add(bike);
     }
 
     // called by entryPoint requestQuote()
@@ -83,7 +81,7 @@ public class BikeProvider {
             if (requestedBikeCategories.contains(bike.getBikeCategory()) && bike.checkDateRange(dateRange)) {
                 bikesAvailable.add(bike);
                 if (bikesAvailable.size() == requestedBikeCategories.size()) {
-                    Order quote =  new Order(this, dateRange, location, bikesAvailable, delivery);
+                    Order quote = new Order(this, dateRange, location, bikesAvailable, delivery);
                     return quote;
                 }
             }
@@ -91,15 +89,22 @@ public class BikeProvider {
         return null;
     }
 
-    public void bookOrder(Order order) {
-        order.book();
-    }
+//    public void bookOrder(Order order) {
+//        order.book();
+//    }
 
     public void checkoutBikes(String bookingID) {
-        orders.get(bookingID).takeBikes();
+        System.out.println("check out");
+        (orders.get(bookingID)).takeBikes();
     }
 
-    public void returnBikes(Order order) {
-        order.returnBikes(location);
+    public void returnBikes(String bookingID) {
+        (orders.get(bookingID)).returnBikes(location);
     }
+    
+    public void makePartner(BikeProvider other) {
+    	partners.add(other);
+    	other.makePartner(this);
+    }
+    
 }

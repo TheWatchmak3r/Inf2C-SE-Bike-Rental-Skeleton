@@ -1,24 +1,20 @@
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 // Bike Rental System Database
 
 public class SystemDatabase {
     /* fields */
-    public static ArrayList<BikeProvider> bikeProviders;
-    public static Map<String,Order> orders;
-
-    /* constructor */
-    SystemDatabase() {
-        bikeProviders = new ArrayList<BikeProvider>();
-        orders = new HashMap<String, Order>();
-    }
+    public static ArrayList<BikeProvider> bikeProviders = new ArrayList<BikeProvider>();
+    public static HashMap<String,Order> orders = new HashMap<String, Order>();
 
     /*accessors */
     public ArrayList<BikeProvider> getBikeProviders() {
         return bikeProviders;
     }
 
-    public Map<String,Order> getOrders() {
+    public static HashMap<String,Order> getOrders() {
         return orders;
     }
 

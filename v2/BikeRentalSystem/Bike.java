@@ -1,8 +1,4 @@
 
-import sun.reflect.generics.tree.Tree;
-
-import java.math.BigDecimal;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 enum BikeStatus {
@@ -22,6 +18,7 @@ public class Bike extends BikeType {
                 bikeType.getReplacementValue(), bikeType.getDailyRentalPrice());
         this.bookings = new TreeSet<>();
         this.bikeStatus = BikeStatus.AVAILABLE;
+        this.getBikeProvider().addBike(this);
     }
 
     /* accessors */
@@ -32,7 +29,6 @@ public class Bike extends BikeType {
     public TreeSet<DateRange> getBookings() {
         return bookings;
     }
-
     /* methods */
     public void checkOut() {
         bikeStatus = BikeStatus.CHECKED_OUT;
@@ -59,5 +55,13 @@ public class Bike extends BikeType {
         assert checkDateRange(dates);
         bookings.add(dates);
     }
-
+    
+//    public void onPickup() {
+//    	bikeStatus = BikeStatus.ON_DELIVERY;
+//    }
+//    
+//    public void onDropoff() {
+//    	bikeStatus = BikeStatus.CHECKED_OUT;
+//    }
+    
 }

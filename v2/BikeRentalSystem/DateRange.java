@@ -2,9 +2,8 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import java.util.function.BooleanSupplier;
 
-public class DateRange implements Comparable<DateRange> {
+public class DateRange implements Comparable {
     private LocalDate start, end;
     
     public DateRange(LocalDate start, LocalDate end) {
@@ -54,18 +53,19 @@ public class DateRange implements Comparable<DateRange> {
         DateRange other = (DateRange) obj;
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
-
+    
+    // You can add your own methods here
     @Override
-    public int compareTo(DateRange anotherDateRange) {
-        if (this.start.isBefore(anotherDateRange.start)) {
+    public int compareTo(Object anotherDateRange) {
+        if (this.start.isBefore(((DateRange)anotherDateRange).start)) {
             return 1;
         }
-        else if (this.equals(anotherDateRange)) {
+        else if (this.equals((DateRange)anotherDateRange)) {
             return 0;
         }
-        else {return -1;}
-
+        else {
+        	return -1;
+        }
     }
-
-    // You can add your own methods here
+    
 }
