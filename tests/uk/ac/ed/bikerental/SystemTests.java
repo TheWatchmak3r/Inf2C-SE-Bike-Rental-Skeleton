@@ -51,7 +51,7 @@ public class SystemTests {
     	type7 = new BikeType(provider2, "road bike", road, new BigDecimal(85), new BigDecimal(16));
     	type8 = new BikeType(provider3, "road bike", road, new BigDecimal(90), new BigDecimal(20));
     	// bikes of provider1
-    	bike1 = new Bike(type1); // automatically adds bike to the provider's stock?
+    	bike1 = new Bike(type1);
         bike2 = new Bike(type1);
     	bike3 = new Bike(type2);
     	bike4 = new Bike(type3);
@@ -94,7 +94,6 @@ public class SystemTests {
     	// quotes5 contains 1 result from provider1 for now
     	BikeCategory[] wantedBikes1 = {mountain, mountain, ebike, road};
     	quotes5 = search5.requestQuote(dateRange3, location4, new ArrayList<BikeCategory>(Arrays.asList(wantedBikes1)), false);
-    	order1 = quotes1.get(0).book(customer1);  // saved in order1 for later tests
     	// quotes5 has requested dates dateRange3 at location4, which overlaps with
     	// dateRange1, therefore no available quote found when satisfying bikes are 
     	// reserved by quotes1
@@ -165,12 +164,12 @@ public class SystemTests {
         // quotes2 –– 0.25 * (90 * 3) = 67.5
     	assertEquals(new BigDecimal(67.5).setScale(2, RoundingMode.FLOOR), 
     			quotes2.get(0).getDeposit().setScale(2, RoundingMode.FLOOR));
-    	// quotes3 - first one – 0.2 * (100 + 80 + 120) = 60
-    	assertEquals(new BigDecimal(60).setScale(2, RoundingMode.FLOOR), 
+    	// quotes3 - first one – 0.2 * (100 + 100 + 80) = 56
+    	assertEquals(new BigDecimal(56).setScale(2, RoundingMode.FLOOR), 
     			quotes3.get(0).getDeposit().setScale(2, RoundingMode.FLOOR));
     	// quotes3 - second one - 0.15 * (100 + 110 + 85) = 44.25
-    	assertEquals(new BigDecimal(44.25).setScale(2, RoundingMode.FLOOR), 
-    			quotes3.get(1).getDeposit().setScale(2, RoundingMode.FLOOR));
+    	assertEquals(new BigDecimal(44.25).setScale(2, RoundingMode.CEILING), 
+    			quotes3.get(1).getDeposit().setScale(2, RoundingMode.CEILING));
     }
     
     @Test
@@ -193,6 +192,7 @@ public class SystemTests {
     @Test
     void testBookQuoteID() {
     	// booking number is unique
+        order1 = quotes1.get(0).book(customer1);
         assertFalse(order1.getId().equals(order2.getId()));
         // it's very complicated for us to check that this ID is unique in all cases
         // and it's impossible to say this by simply enumerating a small number of orders
@@ -205,7 +205,7 @@ public class SystemTests {
     	// because customer3 would like to use delivery service, order2 should be scheduled for delivery
     	assertTrue(order2.isDelivery());
     	// implemented mock delivery inside order class
-    	order2.deliver();
+    	order2.takeBikes();
     	assertEquals(BikeStatus.ON_DELIVERY, bike6.bikeStatus);
     	assertEquals(BikeStatus.ON_DELIVERY, bike7.bikeStatus);
     	assertEquals(BikeStatus.ON_DELIVERY, bike8.bikeStatus);
@@ -215,12 +215,13 @@ public class SystemTests {
     void testReturnBikesOriginal() {
     	// accept booking number to handle return, check states are updated correctly
     	// first prepare for testing return (check bikes out first then return them)
-    	provider1.checkoutBikes(order1);
+        System.out.println(order1.getId());
+    	provider1.checkoutBikes(order1.getId());
         order3 = quotes2.get(0).book(customer2);
-        provider3.checkoutBikes(order3);
+        provider3.checkoutBikes(order3.getId());
         // orders 1 and 3 are returned to their original providers
-    	provider1.returnBikes(order1);                          // change return parameter to order ID
-    	provider3.returnBikes(order3);
+    	provider1.returnBikes(order1.getId());
+    	provider3.returnBikes(order3.getId());
     	// now check status of orders and bikes
     	assertEquals(OrderStatus.COMPLETE, order1.status);
     	assertEquals(BikeStatus.AVAILABLE, bike1.bikeStatus);
@@ -236,16 +237,16 @@ public class SystemTests {
     @Test
     void testReturnBikesPartner() {
         // delivery service should be used if returned to partner, also check state update
-    	provider2.checkoutBikes(order2);
+    	provider2.checkoutBikes(order2.getId());
     	provider2.makePartner(provider1);
     	// order2 is recorded return by provider1, a partner provider of provider2
-    	provider1.returnBikes(order2);
+    	provider1.returnBikes(order2.getId());
     	assertEquals(OrderStatus.COMPLETE, order2.status);
     	assertEquals(BikeStatus.ON_DELIVERY, bike6.bikeStatus);
     	assertEquals(BikeStatus.ON_DELIVERY, bike7.bikeStatus);
     	assertEquals(BikeStatus.ON_DELIVERY, bike8.bikeStatus);
     	// this is when provider2 receives the returned bikes
-    	provider2.returnBikes(order2);
+    	provider2.returnBikes(order2.getId());
     	assertEquals(BikeStatus.AVAILABLE, bike6.bikeStatus);
     	assertEquals(BikeStatus.AVAILABLE, bike7.bikeStatus);
     	assertEquals(BikeStatus.AVAILABLE, bike8.bikeStatus);
